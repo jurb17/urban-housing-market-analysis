@@ -74,8 +74,8 @@ for index, row in original_employment_df.iterrows():
         "month": month,
         "working-age population": working_age_population,
         "employment (in thousands)": row["Employment (000's)"],
-        "annual working-age population change": pop_difference,
-        "annual employment change": emp_difference,
+        "annual working-age population change": pop_percent_change,
+        "annual employment change": emp_percent_change,
     }
 
     employment_df.loc[employment_df.shape[0]] = new_row
