@@ -18,8 +18,8 @@ data = {
     "month": [],
     "working-age population": [],
     "employment (in thousands)": [],
-    "difference (in thousands)": [],
-    "percent change": [],
+    "annual working-age population change": [],
+    "annual employment change": [],
 }
 employment_df = pd.DataFrame(data)
 
@@ -30,25 +30,39 @@ for index, row in original_employment_df.iterrows():
     year = row["YEAR"].split("-")[1]
     # translate month value to full name of month
     month = convert_month(month)
+
     # translate year to 4-digit format
     if int(year) > 50:
         year = "19" + year
     else:
         year = "20" + year
+
     # determine working age population by dividing employment by employment-population ratio
     working_age_population = row["Employment (000's)"] / (row["Emp/Pop (%)"] / 100)
+    working_age_population_last_year = float(
+        original_employment_df.iloc[index - 12]["Employment (000's)"]
+    ) / (float(original_employment_df.iloc[index - 12]["Emp/Pop (%)"]) / 100)
+
     # determine difference and percent change between this year and last year
     if index < 12:
-        difference = "n/a"
-        percent_change = "n/a"
+        pop_difference = "n/a"
+        pop_percent_change = "n/a"
+        emp_difference = "n/a"
+        emp_percent_change = "n/a"
     else:
-        difference = round(
+        pop_difference = round(
+            working_age_population - working_age_population_last_year, 2
+        )
+        pop_percent_change = round(
+            pop_difference / working_age_population_last_year * 100, 2
+        )
+        emp_difference = round(
             row["Employment (000's)"]
             - float(original_employment_df.iloc[index - 12]["Employment (000's)"]),
             2,
         )
-        percent_change = round(
-            difference
+        emp_percent_change = round(
+            emp_difference
             / float(original_employment_df.iloc[index - 12]["Employment (000's)"])
             * 100,
             2,
@@ -60,8 +74,8 @@ for index, row in original_employment_df.iterrows():
         "month": month,
         "working-age population": working_age_population,
         "employment (in thousands)": row["Employment (000's)"],
-        "difference (in thousands)": difference,
-        "percent change": percent_change,
+        "annual working-age population change": pop_difference,
+        "annual employment change": emp_difference,
     }
 
     employment_df.loc[employment_df.shape[0]] = new_row
