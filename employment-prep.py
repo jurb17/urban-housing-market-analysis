@@ -21,6 +21,9 @@ data = {
 }
 employment_df = pd.DataFrame(data)
 
+# add "Annual" to months_list
+months_list.append("Annual")
+
 # iterate through rows and then columns to organize data into prep state.
 for index, row in new_emp_df.iterrows():
     temp_dict = {"year": row["YEAR"]}

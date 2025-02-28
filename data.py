@@ -11,5 +11,4 @@ months_list = [
     "October",
     "November",
     "December",
-    "Annual",
 ]
